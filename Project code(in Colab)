@@ -1,0 +1,9 @@
+# 라이브러리 불러오기
+import cv2
+from google.colab.patches import cv2_imshow
+
+# 이미지 읽기
+image = cv2.imread("/content/apple.jpg")
+
+# 이미지 출력
+cv2_imshow(image)
