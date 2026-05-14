@@ -11,3 +11,6 @@ image = cv2.imread("/content/apple.jpg")
 
 # 이미지 출력
 cv2_imshow(image)
+
+# 33ms 대기
+cv2.waitKey(33)
