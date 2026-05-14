@@ -17,3 +17,6 @@ else:
 
 # 33ms 대기
 cv2.waitKey(33)
+
+# 창 닫기
+cv2.destroyAllWindows()
