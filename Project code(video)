@@ -1,1 +1,75 @@
+# OpenCV 설치
+!pip install opencv-python
 
+import cv2
+import time
+from google.colab.patches import cv2_imshow
+
+# 동영상 파일 열기
+video = cv2.VideoCapture("/content/sample_video.mp4")
+
+# 녹화 여부
+recording = False
+writer = None
+
+# 코덱 설정
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+
+while video.isOpened():
+    ret, frame = video.read()
+
+    # 프레임 읽기 실패 시 종료
+    if not ret:
+        print("동영상 종료")
+        break
+
+    # 영상 출력
+    cv2_imshow(frame)
+
+    # 녹화 중이면 저장
+    if recording:
+        writer.write(frame)
+
+    # 33ms 동안 키 입력 대기
+    key = cv2.waitKey(33)
+
+    # ESC → 종료
+    if key == 27:
+        print("프로그램 종료")
+        break
+
+    # Ctrl + Z → 이미지 캡처
+    elif key == 26:
+        filename = f"capture_{int(time.time())}.jpg"
+        cv2.imwrite(filename, frame)
+        print(f"캡처 저장: {filename}")
+
+    # Ctrl + X → 녹화 시작
+    elif key == 24:
+        if not recording:
+            height, width, _ = frame.shape
+
+            writer = cv2.VideoWriter(
+                "record_output.avi",
+                fourcc,
+                30,
+                (width, height)
+            )
+
+            recording = True
+            print("녹화 시작")
+
+    # Ctrl + C → 녹화 종료
+    elif key == 3:
+        if recording:
+            recording = False
+            writer.release()
+            print("녹화 종료")
+
+# 자원 해제
+video.release()
+
+if writer is not None:
+    writer.release()
+
+cv2.destroyAllWindows()
